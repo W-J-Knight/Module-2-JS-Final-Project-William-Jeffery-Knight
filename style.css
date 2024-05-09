@@ -1,4 +1,89 @@
 /* get layout to look on destop */
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+html {
+    font-size: 10px;
+}
+header{
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px black solid;
+    width: 90%;
+    margin: auto;
+}
+h1{
+    font-size: 45px;
+}
+main{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+.storage-area{
+    width: 250px;
+    height: 80vh;
+    background-color: rgb(49, 11, 201);
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+h2{
+    text-align: center;
+}
+.food-item{
+    background-color: aquamarine;
+    width: 250px;
+    height: 50px;
+}
+/* h3{
+    text-align: center;
+} */
+/* .date{
+    text-align: center;
+} */
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_tooltip */
+.tooltip {
+    text-align: center;
+    position: relative;
+    /* display: inline-block; */
+    border-bottom: 1px dotted black;
+  }
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 100%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
 /* just need to work on functionality of JavaScript */
 /* layout to each other storage area */
 /* layout of storage inside with items */
