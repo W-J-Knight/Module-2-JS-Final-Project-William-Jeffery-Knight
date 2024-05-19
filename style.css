@@ -20,13 +20,19 @@ h1{
 main{
     display: flex;
     justify-content: space-evenly;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+}
+#container{
+    display: flex;
+    /* background-color: aqua; */
+    justify-content: space-evenly;
 }
 .storage-area{
+
     width: 250px;
-    height: 80vh;
+    min-height: 30vh;
     background-color: rgb(49, 11, 201);
-    margin-top: 20px;
+    margin: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -34,10 +40,21 @@ main{
 h2{
     text-align: center;
 }
+form{
+    display: flex;
+    flex-direction: column;
+}
+
 .food-item{
+    margin-top: 1rem;
     background-color: aquamarine;
     width: 250px;
     height: 50px;
+}
+.food-item p{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 /* h3{
     text-align: center;
