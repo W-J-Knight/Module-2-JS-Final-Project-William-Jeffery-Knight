@@ -1,5 +1,5 @@
-//intventory class
-class Intventory {
+//Inventory class
+class Inventory {
     // static storageAreaList = []
     constructor() {
         this.storageAreaList = []
@@ -12,10 +12,7 @@ class Intventory {
 
             const name = this.storageAreaNameInput.value
             const type = this.storageAreaTypeInput.value
-            const newStorageArea = new StorageArea(name, type)    
-            
-            console.log("newStorageArea",newStorageArea)
-
+            const newStorageArea = new StorageArea(name, type)
             this.addNewStorageArea(newStorageArea)
             newStorageArea.display(this)
         })
@@ -88,7 +85,7 @@ class StorageArea {
 
         return groupedInt
     }
-    display(intventory) {
+    display(Inventory) {
         const section = document.createElement('section')
         const div = document.createElement('div')
         section.classList.add('storage-area')
@@ -98,8 +95,7 @@ class StorageArea {
         const button = document.createElement("button")
         button.appendChild(document.createTextNode("remove storage area"))
         button.addEventListener('click', ()=>{
-            console.log("click storage area", this.storageAreaID)
-            this.deleteStorageArea(intventory, section)
+            this.deleteStorageArea(Inventory, section)
         })
         const form = this.itemForm()
         div.appendChild(h2)
@@ -107,8 +103,7 @@ class StorageArea {
         div.appendChild(form)
         section.appendChild(div)
         section.appendChild(form)
-        console.log(section)
-        intventory.container.appendChild(section)
+        Inventory.container.appendChild(section)
 
         this.handleForm()
 
@@ -178,10 +173,8 @@ class StorageArea {
                 const name = itemNameInput.value
                 const type = itemTypeInput.value
                 const date = itemDateInput.value
-                console.log(date)
                 const amomount = itemAmountInput.value
                 const newItem = new Item(name, type, date, amomount, this.name)
-                console.log("new Item", newItem)
                 this.addNewItem(newItem)
                 newItem.display(this)
             }
@@ -191,8 +184,8 @@ class StorageArea {
         this.itemList.push(item)
     }
 
-    deleteStorageArea(intventory, section) {
-        intventory.storageAreaList = intventory.storageAreaList.filter((storageArea)=>{
+    deleteStorageArea(Inventory, section) {
+        Inventory.storageAreaList = Inventory.storageAreaList.filter((storageArea)=>{
             return storageArea.storageAreaID != this.storageAreaID
         })
         section.remove()
@@ -230,7 +223,6 @@ class Item {
         button.appendChild(document.createTextNode("remove item"))
         div.appendChild(button)
         button.addEventListener('click', ()=>{
-            console.log("click item", this.itemID, div)
             this.deleteItem(storage, div)
             
         })
@@ -250,7 +242,6 @@ class Item {
             return item.itemID != this.itemID
         })
        storage.itemList = filterArray
-        console.log(storage.itemList)
         div.remove()
     }
 }
@@ -263,19 +254,14 @@ class Item {
 // search for items
 
 // testing------------
-const intventory1 = new Intventory()
+
+// const inventory1 = new Inventory()
+// function stringifyIn
+if (localStorage.getItem("inventory1") == undefined){
+    const inventory1 = new Inventory()
+    console.log("inventory1 = undefined")
+    let inventory1_stringify = JSON.stringify(inventory1)
+    localStorage.setItem("inventory1", inventory1_stringify)
+}
 
 
-console.log(intventory1.storageAreaList)
-// console.log("get-1", intventory1.getStorageArea(2))
-// intventory1.addNewItemToStorageArea(2, "whiterRice", "roomTemp", "2024-2-6", "14oz")
-// intventory1.addNewItemToStorageArea(2, "whiterRice", "roomTemp", "2024-3-6", "14oz")
-// intventory1.addNewItemToStorageArea(2, "whiterRice", "roomTemp", "2024-1-6", "14oz")
-// intventory1.addNewItemToStorageArea(2, "beans", "roomTemp", "2024-12-6", "14oz")
-// intventory1.addNewItemToStorageArea(2, "beans", "roomTemp", "2024-5-6", "14oz")
-// intventory1.addNewItemToStorageArea(2, "beans", "roomTemp", "2024-6-6", "14oz")
-
-// intventory1.getStorageArea(2).sortedList()
-// const x = intventory1.getStorageArea(2).sortIntoCategories()
-// console.log("get-2", intventory1.getStorageArea(2).itemList)
-// console.log('x', x)
