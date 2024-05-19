@@ -28,7 +28,7 @@ class Intventory {
     getStorageArea(id) {
         // gett filter array
         const tempList = this.storageAreaList.filter(function (storageArea) {
-            return storageArea.StorageAreaID == id
+            return storageArea.storageAreaID == id
         })
         // just need the only object in the array
         return tempList[0]
@@ -48,7 +48,7 @@ class StorageArea {
     static id = 0
     constructor(name, type, room = 'kitchen') {
         StorageArea.id++;
-        this.StorageAreaID = StorageArea.id;
+        this.storageAreaID = StorageArea.id;
         this.name = name;
         this.type = type;
         this.room = room;
@@ -92,13 +92,14 @@ class StorageArea {
         const section = document.createElement('section')
         const div = document.createElement('div')
         section.classList.add('storage-area')
-        section.setAttribute('id', `storage-area-${this.StorageAreaID}`)
+        section.setAttribute('id', `storage-area-${this.storageAreaID}`)
         const h2 = document.createElement('h2')
         h2.appendChild(document.createTextNode(this.name))
         const button = document.createElement("button")
         button.appendChild(document.createTextNode("remove storage area"))
         button.addEventListener('click', ()=>{
-            console.log("click storage area", this.StorageAreaID)
+            console.log("click storage area", this.storageAreaID)
+            this.deleteStorageArea(intventory, section)
         })
         const form = this.itemForm()
         div.appendChild(h2)
@@ -120,11 +121,11 @@ class StorageArea {
     // display item form
     itemForm() {
         const form = document.createElement("form")
-        form.setAttribute('id', `item-form-${this.StorageAreaID}`)
+        form.setAttribute('id', `item-form-${this.storageAreaID}`)
         const nameInput = document.createElement("input")
         nameInput.setAttribute('type', 'text');
         nameInput.setAttribute('name', 'item-name');
-        nameInput.setAttribute('id', `item-name-${this.StorageAreaID}`);
+        nameInput.setAttribute('id', `item-name-${this.storageAreaID}`);
         nameInput.setAttribute('class', 'form-input');
         nameInput.setAttribute('size', 50);
         nameInput.setAttribute('placeholder', 'NAME');
@@ -133,7 +134,7 @@ class StorageArea {
         const typeInput = document.createElement("input")
         typeInput.setAttribute('type', 'text');
         typeInput.setAttribute('name', 'item-type');
-        typeInput.setAttribute('id', `item-type-${this.StorageAreaID}`);
+        typeInput.setAttribute('id', `item-type-${this.storageAreaID}`);
         typeInput.setAttribute('class', 'form-input');
         typeInput.setAttribute('size', 50);
         typeInput.setAttribute('placeholder', 'TYPE');
@@ -142,7 +143,7 @@ class StorageArea {
         const dateInput = document.createElement("input")
         dateInput.setAttribute('type', 'text');
         dateInput.setAttribute('name', 'item-date');
-        dateInput.setAttribute('id', `item-date-${this.StorageAreaID}`);
+        dateInput.setAttribute('id', `item-date-${this.storageAreaID}`);
         dateInput.setAttribute('class', 'form-input');
         dateInput.setAttribute('size', 50);
         dateInput.setAttribute('placeholder', 'year-month-day');
@@ -151,7 +152,7 @@ class StorageArea {
         const amountInput = document.createElement("input")
         amountInput.setAttribute('type', 'text');
         amountInput.setAttribute('name', 'item-type');
-        amountInput.setAttribute('id', `item-amount-${this.StorageAreaID}`);
+        amountInput.setAttribute('id', `item-amount-${this.storageAreaID}`);
         amountInput.setAttribute('class', 'form-input');
         amountInput.setAttribute('size', 50);
         amountInput.setAttribute('placeholder', 'AMOUNT');
@@ -165,11 +166,11 @@ class StorageArea {
     }
 
     handleForm() {
-        const createItem = document.getElementById(`item-form-${this.StorageAreaID}`)
-        const itemNameInput = document.getElementById(`item-name-${this.StorageAreaID}`)
-        const itemTypeInput = document.getElementById(`item-type-${this.StorageAreaID}`)
-        const itemDateInput = document.getElementById(`item-date-${this.StorageAreaID}`)
-        const itemAmountInput = document.getElementById(`item-amount-${this.StorageAreaID}`)
+        const createItem = document.getElementById(`item-form-${this.storageAreaID}`)
+        const itemNameInput = document.getElementById(`item-name-${this.storageAreaID}`)
+        const itemTypeInput = document.getElementById(`item-type-${this.storageAreaID}`)
+        const itemDateInput = document.getElementById(`item-date-${this.storageAreaID}`)
+        const itemAmountInput = document.getElementById(`item-amount-${this.storageAreaID}`)
 
         createItem.addEventListener(
             'submit', (e) => {
@@ -190,10 +191,11 @@ class StorageArea {
         this.itemList.push(item)
     }
 
-    removeItem(id) {
-        this.itemList = this.itemList.filter((item) => {
-            return item.itemID != id
+    deleteStorageArea(intventory, section) {
+        intventory.storageAreaList = intventory.storageAreaList.filter((storageArea)=>{
+            return storageArea.storageAreaID != this.storageAreaID
         })
+        section.remove()
     }
 
 
@@ -229,21 +231,27 @@ class Item {
         div.appendChild(button)
         button.addEventListener('click', ()=>{
             console.log("click item", this.itemID, div)
+            this.deleteItem(storage, div)
             
         })
-        const section = document.getElementById(`storage-area-${storage.StorageAreaID}`)
+        const section = document.getElementById(`storage-area-${storage.storageAreaID}`)
         section.appendChild(div)
         return
 
     }
-    moveItem() {
+    moveItem(storage, div) {
 
     }
     editItem() {
 
     }
-    deleteItem() {
-
+    deleteItem(storage, div) {
+        const filterArray = storage.itemList.filter((item)=>{
+            return item.itemID != this.itemID
+        })
+       storage.itemList = filterArray
+        console.log(storage.itemList)
+        div.remove()
     }
 }
 // add new item
