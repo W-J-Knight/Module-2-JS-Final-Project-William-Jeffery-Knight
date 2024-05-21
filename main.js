@@ -20,6 +20,8 @@ class Inventory {
     // add new storearea
     addNewStorageArea(storageArea) {
         this.storageAreaList.push(storageArea)
+        let storageArea_list = JSON.stringify(this.storageAreaList)
+        localStorage.setItem("storageArea_list", storageArea_list)
     }
 
     getStorageArea(id) {
@@ -36,6 +38,8 @@ class Inventory {
         //   add new to staorage area
         // storageArea.addNewItem(itemName, itemType, itemExpirationDate, itemAmount, storageArea.name)
     }
+     
+
 
 
 }
@@ -51,6 +55,7 @@ class StorageArea {
         this.room = room;
         // list of items
         this.itemList = []
+        
     }
 
 
@@ -85,7 +90,7 @@ class StorageArea {
 
         return groupedInt
     }
-    display(Inventory) {
+    display(inventory) {
         const section = document.createElement('section')
         const div = document.createElement('div')
         section.classList.add('storage-area')
@@ -95,17 +100,18 @@ class StorageArea {
         const button = document.createElement("button")
         button.appendChild(document.createTextNode("remove storage area"))
         button.addEventListener('click', ()=>{
-            this.deleteStorageArea(Inventory, section)
+            console.log("deleteStorageArea")
+            this.deleteStorageArea(inventory, section)
         })
-        const form = this.itemForm()
+        const form = this.itemForm(inventory)
         div.appendChild(h2)
         div.appendChild(button)
         div.appendChild(form)
         section.appendChild(div)
         section.appendChild(form)
-        Inventory.container.appendChild(section)
+        inventory.container.appendChild(section)
 
-        this.handleForm()
+        this.handleForm(inventory)
 
     }
     // edit storeageArea
@@ -160,7 +166,7 @@ class StorageArea {
         return form
     }
 
-    handleForm() {
+    handleForm(inventory) {
         const createItem = document.getElementById(`item-form-${this.storageAreaID}`)
         const itemNameInput = document.getElementById(`item-name-${this.storageAreaID}`)
         const itemTypeInput = document.getElementById(`item-type-${this.storageAreaID}`)
@@ -175,19 +181,24 @@ class StorageArea {
                 const date = itemDateInput.value
                 const amomount = itemAmountInput.value
                 const newItem = new Item(name, type, date, amomount, this.name)
-                this.addNewItem(newItem)
-                newItem.display(this)
+                this.addNewItem(newItem, inventory)
+                newItem.display(this, inventory)
             }
         )
     }
-    addNewItem(item) {
+    addNewItem(item, inventory) {
         this.itemList.push(item)
+        let storageArea_list = JSON.stringify(inventory.storageAreaList)
+        localStorage.setItem("storageArea_list", storageArea_list)
+        
     }
 
-    deleteStorageArea(Inventory, section) {
-        Inventory.storageAreaList = Inventory.storageAreaList.filter((storageArea)=>{
+    deleteStorageArea(inventory, section) {
+        inventory.storageAreaList = inventory.storageAreaList.filter((storageArea)=>{
             return storageArea.storageAreaID != this.storageAreaID
         })
+        let storageArea_list = JSON.stringify(inventory.storageAreaList)
+        localStorage.setItem("storageArea_list", storageArea_list)
         section.remove()
     }
 
@@ -208,7 +219,7 @@ class Item {
         this.amount = amount;
         this.location = location;
     }
-    display(storage){
+    display(storage, inventory){
   
         const div = document.createElement('div')
         div.classList.add("food-item")
@@ -224,6 +235,8 @@ class Item {
         div.appendChild(button)
         button.addEventListener('click', ()=>{
             this.deleteItem(storage, div)
+            let storageArea_list = JSON.stringify(inventory.storageAreaList)
+            localStorage.setItem("storageArea_list", storageArea_list)
             
         })
         const section = document.getElementById(`storage-area-${storage.storageAreaID}`)
@@ -257,11 +270,26 @@ class Item {
 
 // const inventory1 = new Inventory()
 // function stringifyIn
-if (localStorage.getItem("inventory1") == undefined){
-    const inventory1 = new Inventory()
-    console.log("inventory1 = undefined")
-    let inventory1_stringify = JSON.stringify(inventory1)
-    localStorage.setItem("inventory1", inventory1_stringify)
+let inventory1 = new Inventory()
+
+
+// from local storage
+if (localStorage.getItem("storageArea_list") == undefined) {
+    console.log("No localStorage storageArea_list")
 }
-
-
+else{
+    console.log('List')
+    let tempList = JSON.parse(localStorage.getItem("storageArea_list"))
+    for(i=0; i < tempList.length; i++){
+        console.log(tempList[i])
+        const newStorageArea = new StorageArea(tempList[i].name, tempList[i].type)
+        inventory1.addNewStorageArea(newStorageArea)
+        newStorageArea.display(inventory1)
+        
+        for(j=0; j < tempList[i].itemList.length; j++){
+        let newItem = new Item(tempList[i].itemList[j].name, tempList[i].itemList[j].type, tempList[i].itemList[j].expirationDate, tempList[i].itemList[j].amomount, tempList[i].name)
+        newStorageArea.addNewItem(newItem, inventory1)
+        newItem.display(newStorageArea, inventory1)
+        }
+    }
+}
