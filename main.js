@@ -7,6 +7,11 @@ class Inventory {
         this.createStorageArea = document.getElementById("storage-area-form")
         this.storageAreaNameInput = document.getElementById("storage-area-name")
         this.storageAreaTypeInput = document.getElementById("storage-area-type")
+        this.itemSearchButton = document.getElementById('search-button')
+        this.itemSearch = document.getElementById('search-item')
+        this.searchItemClear = document.getElementById('clear-button')
+
+        // event listeners
         this.createStorageArea.addEventListener('submit', (e) => {
             e.preventDefault()
 
@@ -15,6 +20,16 @@ class Inventory {
             const newStorageArea = new StorageArea(name, type)
             this.addNewStorageArea(newStorageArea)
             newStorageArea.display(this)
+        })
+        this.itemSearchButton.addEventListener("click", (e) => {
+            e.preventDefault()
+            this.searchForItems()
+        }
+        )
+        this.searchItemClear.addEventListener('click', (e) => {
+            e.preventDefault()
+            console.log('clear')
+            this.clearSearch()
         })
     }
     // add new storearea
@@ -33,13 +48,37 @@ class Inventory {
         return tempList[0]
     }
 
-    addNewItemToStorageArea(storageAreaID, itemName, itemType, itemExpirationDate, itemAmount, itemLocation) {
-        let storageArea = this.getStorageArea(storageAreaID)
-        //   add new to staorage area
-        // storageArea.addNewItem(itemName, itemType, itemExpirationDate, itemAmount, storageArea.name)
-    }
-     
 
+    // search for items
+    searchForItems() {
+        const searchText = this.itemSearch.value
+        console.log(searchText.toLowerCase())
+        this.searchItemClear.style.display = 'block'
+        this.storageAreaList.forEach((storageArea) => {
+            console.log(storageArea.itemList)
+        })
+        const items = document.querySelectorAll(".food-item")
+        items.forEach((item) => {
+            const itemName = item.querySelector('.item-name').innerHTML.toLowerCase()
+            console.log(itemName)
+            if (itemName.indexOf(searchText) != -1) {
+                item.style.display = 'flex'
+                console.log('match')
+            } else {
+                item.style.display = 'none'
+                console.log('not match')
+            }
+        })
+    }
+
+    clearSearch() {
+        this.searchItemClear.style.display = 'none'
+        this.itemSearch.value = ""
+        const items = document.querySelectorAll(".food-item")
+        items.forEach((item) => {
+            item.style.display = 'flex'
+        })
+    }
 
 
 }
@@ -55,10 +94,8 @@ class StorageArea {
         this.room = room;
         // list of items
         this.itemList = []
-        
+
     }
-
-
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
     sortedList() {
@@ -99,7 +136,7 @@ class StorageArea {
         h2.appendChild(document.createTextNode(this.name))
         const button = document.createElement("button")
         button.appendChild(document.createTextNode("remove storage area"))
-        button.addEventListener('click', ()=>{
+        button.addEventListener('click', () => {
             console.log("deleteStorageArea")
             this.deleteStorageArea(inventory, section)
         })
@@ -182,19 +219,23 @@ class StorageArea {
                 const amomount = itemAmountInput.value
                 const newItem = new Item(name, type, date, amomount, this.name)
                 this.addNewItem(newItem, inventory)
-                newItem.display(this, inventory)
+                const loctionHref = location.href
+                location.replace(loctionHref)//https://www.freecodecamp.org/news/javascript-refresh-page-how-to-reload-a-page-in-js/#:~:text=The%20simplest%20way%20to%20refresh,the%20location.reload()%20method.
+                // location.reload(true)
+                // newItem.display(this, inventory)
             }
         )
     }
     addNewItem(item, inventory) {
         this.itemList.push(item)
+        this.sortedList()
         let storageArea_list = JSON.stringify(inventory.storageAreaList)
         localStorage.setItem("storageArea_list", storageArea_list)
-        
+   
     }
 
     deleteStorageArea(inventory, section) {
-        inventory.storageAreaList = inventory.storageAreaList.filter((storageArea)=>{
+        inventory.storageAreaList = inventory.storageAreaList.filter((storageArea) => {
             return storageArea.storageAreaID != this.storageAreaID
         })
         let storageArea_list = JSON.stringify(inventory.storageAreaList)
@@ -219,25 +260,26 @@ class Item {
         this.amount = amount;
         this.location = location;
     }
-    display(storage, inventory){
-  
+    display(storage, inventory) {
+
         const div = document.createElement('div')
         div.classList.add("food-item")
         div.setAttribute('id', `food-item${this.itemID}`)
         const p = document.createElement('p')
+        p.classList.add('item-name')
         p.appendChild(document.createTextNode(this.name))
-        const span = document.createElement("span")
-        span.appendChild(document.createTextNode(this.expirationDate))
-        p.appendChild(span)
+        const date = document.createElement("p")
+        date.appendChild(document.createTextNode(this.expirationDate))
         div.appendChild(p)
+        div.appendChild(date)
         const button = document.createElement("button")
         button.appendChild(document.createTextNode("remove item"))
         div.appendChild(button)
-        button.addEventListener('click', ()=>{
+        button.addEventListener('click', () => {
             this.deleteItem(storage, div)
             let storageArea_list = JSON.stringify(inventory.storageAreaList)
             localStorage.setItem("storageArea_list", storageArea_list)
-            
+
         })
         const section = document.getElementById(`storage-area-${storage.storageAreaID}`)
         section.appendChild(div)
@@ -251,10 +293,10 @@ class Item {
 
     }
     deleteItem(storage, div) {
-        const filterArray = storage.itemList.filter((item)=>{
+        const filterArray = storage.itemList.filter((item) => {
             return item.itemID != this.itemID
         })
-       storage.itemList = filterArray
+        storage.itemList = filterArray
         div.remove()
     }
 }
@@ -266,30 +308,30 @@ class Item {
 
 // search for items
 
-// testing------------
-
-// const inventory1 = new Inventory()
-// function stringifyIn
 let inventory1 = new Inventory()
-
-
 // from local storage
 if (localStorage.getItem("storageArea_list") == undefined) {
     console.log("No localStorage storageArea_list")
 }
-else{
+else {
     console.log('List')
     let tempList = JSON.parse(localStorage.getItem("storageArea_list"))
-    for(i=0; i < tempList.length; i++){
+    for (i = 0; i < tempList.length; i++) {
         console.log(tempList[i])
         const newStorageArea = new StorageArea(tempList[i].name, tempList[i].type)
         inventory1.addNewStorageArea(newStorageArea)
         newStorageArea.display(inventory1)
-        
-        for(j=0; j < tempList[i].itemList.length; j++){
-        let newItem = new Item(tempList[i].itemList[j].name, tempList[i].itemList[j].type, tempList[i].itemList[j].expirationDate, tempList[i].itemList[j].amomount, tempList[i].name)
-        newStorageArea.addNewItem(newItem, inventory1)
-        newItem.display(newStorageArea, inventory1)
+
+        for (j = 0; j < tempList[i].itemList.length; j++) {
+            let newItem = new Item(tempList[i].itemList[j].name, tempList[i].itemList[j].type, tempList[i].itemList[j].expirationDate, tempList[i].itemList[j].amomount, tempList[i].name)
+            newStorageArea.addNewItem(newItem, inventory1)
+            newItem.display(newStorageArea, inventory1)
         }
     }
 }
+// testing------------
+
+// const inventory1 = new Inventory()
+// function stringifyIn
+
+// inventory1.searchForItems()

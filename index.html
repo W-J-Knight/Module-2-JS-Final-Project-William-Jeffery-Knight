@@ -11,59 +11,65 @@
     <!-- simply header with no navigation -->
     <header>
       <h1>Food Inventory</h1>
-      
+      <div>
+        <button id="search-button">Search</button>
+        <input
+          type="text"
+          class="search"
+          id="search-item"
+          name="search-item"
+          placeholder="search for item"
+          required
+        />
+        <button id="clear-button">X</button>
+      </div>
     </header>
-<main class="inventory">
-  <div id="container">
+    <main class="inventory">
+      <div id="container"></div>
+      <!-- first layout a couple test storages areas -->
+      <form id="storage-area-form">
+        <div class="form-control">
+          <input
+            type="text"
+            class="form-input"
+            id="storage-area-name"
+            name="storage-area-name"
+            placeholder="Enter storage area"
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            class="form-input"
+            id="storage-area-type"
+            name="storage-area-type"
+            placeholder="Enter type of storage-area-type"
+            required
+          />
+        </div>
+        <div class="form-control">
+          <button type="submit" class="btn"><i></i> Add Storage Area</button>
+        </div>
+      </form>
 
-  </div>
-  <!-- first layout a couple test storages areas -->
-  <form id="storage-area-form">
-    <div class="form-control">
-      <input
-        type="text"
-        class="form-input"
-        id="storage-area-name"
-        name="storage-area-name"
-        placeholder="Enter storage area"
-        required
-      />
-    </div>
-    <div>
-      <input
-        type="text"
-        class="form-input"
-        id="storage-area-type"
-        name="storage-area-type"
-        placeholder="Enter type of storage-area-type"
-        required
-      />
-    </div>
-    <div class="form-control">
-      <button type="submit" class="btn">
-        <i ></i> Add Storage Area
-      </button>
-    </div>
-  </form>
+      <!-- second layout test item in the storages-->
 
-
-  <!-- second layout test item in the storages-->
-
-  <!-- make button to create storage are
+      <!-- make button to create storage are
       with popout form 1.name 2.type a.room temperature b.cold c. frozen-->
 
-  <!-- have a button to delete storage are  
+      <!-- have a button to delete storage are  
       popout alert are you sure with a cancel button and delete button-->
 
-  <!-- need button to add item in the storage areas 
+      <!-- need button to add item in the storage areas 
       with popout form 1.name 2. date 3.needs a.room temperature b. cold  c.frozen d.refrigerate after opening-->
 
-  <!-- Add toolbar the item to display their expiration dates-->
+      <!-- Add toolbar the item to display their expiration dates-->
 
-  <!-- add button to delete a item 
+      <!-- add button to delete a item 
           with alert button and delete button  -->
 
-  <!-- make searchbar to way filter items -->
-</main>
+      <!-- make searchbar to way filter items -->
+    </main>
   </body>
 </html>
