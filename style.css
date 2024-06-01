@@ -58,7 +58,7 @@ form{
     flex-direction: column;
 }
 
-.food-item{
+.food-item, .food-categories{
     margin-top: 1rem;
     background-color: aquamarine;
     width: 250px;

@@ -10,6 +10,8 @@ class Inventory {
         this.itemSearchButton = document.getElementById('search-button')
         this.itemSearch = document.getElementById('search-item')
         this.searchItemClear = document.getElementById('clear-button')
+        this.categorizingItem = document.getElementById('categories')
+        this.categories = false
 
         // event listeners
         this.createStorageArea.addEventListener('submit', (e) => {
@@ -22,14 +24,15 @@ class Inventory {
             newStorageArea.display(this)
         })
         this.itemSearchButton.addEventListener("click", (e) => {
-            e.preventDefault()
             this.searchForItems()
         }
         )
         this.searchItemClear.addEventListener('click', (e) => {
-            e.preventDefault()
-            console.log('clear')
             this.clearSearch()
+        })
+
+        this.categorizingItem.addEventListener('click', () => {
+            this.toggleDisplays()
         })
     }
     // add new storearea
@@ -52,12 +55,16 @@ class Inventory {
     // search for items
     searchForItems() {
         const searchText = this.itemSearch.value
-        console.log(searchText.toLowerCase())
+
         this.searchItemClear.style.display = 'block'
         this.storageAreaList.forEach((storageArea) => {
             console.log(storageArea.itemList)
         })
-        const items = document.querySelectorAll(".food-item")
+
+        let items
+        this.categories ?
+            items = document.querySelectorAll(".food-categories") :
+            items = document.querySelectorAll(".food-item")
         items.forEach((item) => {
             const itemName = item.querySelector('.item-name').innerHTML.toLowerCase()
             console.log(itemName)
@@ -70,7 +77,7 @@ class Inventory {
             }
         })
     }
-
+    
     clearSearch() {
         this.searchItemClear.style.display = 'none'
         this.itemSearch.value = ""
@@ -78,8 +85,52 @@ class Inventory {
         items.forEach((item) => {
             item.style.display = 'flex'
         })
+        
     }
+    
+    // toggle between displays
+    toggleDisplays(){
+        
+        this.categories = !this.categories
+        console.log(this.categories)
+        
+        if(this.categories) {
+        const foodItemArray = document.querySelectorAll('.food-item')
+        foodItemArray.forEach((foodItem) => {
+            foodItem.style.display = "none"
+        })
 
+        this.storageAreaList.forEach((storageArea) => {
+            let section = document.getElementById(`storage-area-${storageArea.storageAreaID}`)
+
+            let categories = storageArea.sortIntoCategories()
+
+            for (let categorie in categories) {
+                const div = document.createElement('div')
+                div.classList.add('food-categories')
+                const h3 = document.createElement('h3')
+                h3.classList.add('item-name')
+                h3.appendChild(document.createTextNode(categorie.toLocaleUpperCase()))
+                div.appendChild(h3)
+                const itemNumber = document.createElement('h3')
+                itemNumber.appendChild(document.createTextNode(`${categories[categorie].length} ITEMS`))
+                div.appendChild(itemNumber)
+                section.appendChild(div)
+                this.categorizingItem.innerHTML = "Add or Remove Items"
+            }
+        })}else{
+            const foodItemArray = document.querySelectorAll('.food-item')
+            foodItemArray.forEach((foodItem) => {
+                foodItem.style.display = "flex"
+            })
+
+            const foodCategoriesArray = document.querySelectorAll('.food-categories')
+            foodCategoriesArray.forEach((categorie)=>{
+                categorie.remove()
+            })
+            this.categorizingItem.innerHTML = "Categories"
+        }
+    }
 
 }
 
@@ -123,7 +174,7 @@ class StorageArea {
             // https://flaviocopes.com/how-to-sort-array-by-date-javascript/
             groupedItems[name].sort((a, b) => b.expirationDate - a.expirationDate)
             return groupedItems
-        }, {})
+        }, [])
 
         return groupedInt
     }
@@ -231,7 +282,7 @@ class StorageArea {
         this.sortedList()
         let storageArea_list = JSON.stringify(inventory.storageAreaList)
         localStorage.setItem("storageArea_list", storageArea_list)
-   
+
     }
 
     deleteStorageArea(inventory, section) {
